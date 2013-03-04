@@ -1,19 +1,19 @@
-import GTK
+using Gtk
 import Base.repl_show
 
 GTKRenderer(name, w, h) = GTKRenderer(name, w, h, nothing)
 function GTKRenderer(name, w, h, closecb)
-    win = GTK.Window(name, w, h)
-    c = GTK.Canvas(win)
+    win = Gtk.Window(name, w, h)
+    c = Gtk.Canvas(win)
     #Tk.pack(c)
     #if !is(closecb,nothing)
     #    ccb = Tk.tcl_callback(closecb)
     #    Tk.tcl_eval("bind $(win.path) <Destroy> $ccb")
     #end
-    r = Cairo.CairoRenderer(GTK.cairo_surface(c))
+    r = Cairo.CairoRenderer(Gtk.cairo_surface(c))
     r.upperright = (w,h)
-    r.on_open = () -> (cr = GTK.cairo_context(c); Cairo.set_source_rgb(cr, 1, 1, 1); Cairo.paint(cr))
-    r.on_close = () -> (GTK.reveal(c); GTK.gtk_doevent())
+    r.on_open = () -> (cr = Gtk.cairo_context(c); Cairo.set_source_rgb(cr, 1, 1, 1); Cairo.paint(cr))
+    r.on_close = () -> (Gtk.reveal(c); Gtk.gtk_doevent())
     r, win
 end
 
@@ -38,6 +38,7 @@ function gtk(self::PlotContainer, args...)
     if reuse_window
         device.on_close()
     end
+    self
 end
 
 function repl_show(io::IO, p::PlotContainer)
